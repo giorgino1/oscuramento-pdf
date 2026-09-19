@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<!-- Oscuramento assistito di atti amministrativi. © 2026 Giorgio La Malfa. Licenza EUPL-1.2. -->
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <!-- Provvisorio, fino al lancio: impedisce l'indicizzazione della pagina di prova. Da togliere insieme al Disallow in robots.txt. -->
+  <meta name="robots" content="noindex, nofollow">
+  <!--
+    Politica di sicurezza dei contenuti: ogni richiesta di rete è limitata
+    all'origine dell'applicazione. L'unica eccezione, dichiarata all'utente,
+    è il download facoltativo del modello di riconoscimento dei nomi da
+    huggingface.co, che avviene solo se il modello non è presente nella
+    cartella `modelli/` e solo dopo il consenso esplicito.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob:; worker-src 'self' blob:; connect-src 'self' https://huggingface.co https://*.huggingface.co https://*.hf.co; img-src 'self' blob: data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Oscura PDF e dati personali gratis, senza caricare il file – Oscuramento assistito</title>
+  <meta name="description" content="Oscura codici fiscali, IBAN, nomi, recapiti e documenti d'identità nei PDF prima di pubblicarli o inviarli. Riconoscimento automatico, rapporto con le fonti normative. Il file non lascia il tuo computer: nessun upload, nessuna registrazione, gratis.">
+  <link rel="canonical" href="./">
+  <meta property="og:title" content="Oscura PDF e dati personali, senza caricare il file">
+  <meta property="og:description" content="Riconosce e oscura codici fiscali, IBAN, nomi, recapiti e documenti d'identità nei PDF. Tutto nel tuo browser: nessun upload.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="it_IT">
+  <link rel="icon" href="data:,">
+  <!-- Dati strutturati per i motori di ricerca: descrivono la pagina, non
+       raccolgono nulla. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Oscuramento assistito di atti amministrativi",
+        "author": { "@type": "Person", "name": "Giorgio La Malfa" },
+        "license": "https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Browser",
+        "inLanguage": "it",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "description": "Oscura i dati personali nei PDF (codice fiscale, IBAN, nomi, recapiti, documenti d'identità) interamente nel browser, senza caricare il file. Rapporto di trattamento con le fonti normative."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "Il mio PDF viene caricato su un server?", "acceptedAnswer": { "@type": "Answer", "text": "No. L'analisi, l'oscuramento e la scrittura del nuovo PDF avvengono nel tuo browser. Puoi verificarlo dagli strumenti di sviluppo, scheda Rete: durante l'uso non parte alcuna richiesta con i tuoi dati." } },
+          { "@type": "Question", "name": "Quali dati riconosce da solo?", "acceptedAnswer": { "@type": "Answer", "text": "Codici fiscali, partite IVA, IBAN e carte di pagamento, telefoni e caselle di posta individuali, indirizzi di residenza, date e luoghi di nascita, estremi e copie di documenti d'identità, firme scansionate, nomi di persona, riferimenti a salute, condizioni di disagio e procedimenti giudiziari." } },
+          { "@type": "Question", "name": "L'oscuramento rimuove davvero il testo dal PDF?", "acceptedAnswer": { "@type": "Answer", "text": "Sì. Le pagine vengono riscritte come immagini con i rettangoli di copertura e il livello testuale del nuovo PDF contiene solo il testo non oscurato. Il testo coperto non è selezionabile né ricercabile." } },
+          { "@type": "Question", "name": "Serve per la pubblicazione all'albo pretorio e in Amministrazione trasparente?", "acceptedAnswer": { "@type": "Answer", "text": "Sì. Per ogni dato lo strumento indica la categoria, la fascia e la norma (d.lgs. 33/2013, d.lgs. 196/2003, Regolamento UE 2016/679, Linee guida del Garante n. 243/2014) e produce un rapporto di trattamento da conservare agli atti. La valutazione finale resta dell'amministrazione." } },
+          { "@type": "Question", "name": "Posso usarlo per un documento da inviare, un curriculum o la copia della carta d'identità?", "acceptedAnswer": { "@type": "Answer", "text": "Sì. Scegli 'Invio, condivisione o pubblicazione facoltativa': tutto ciò che viene riconosciuto è proposto per l'oscuramento e ripristini con un clic ciò che ti serve in chiaro." } },
+          { "@type": "Question", "name": "Quanto costa?", "acceptedAnswer": { "@type": "Answer", "text": "Nulla. Nessuna registrazione, nessuna filigrana, nessun limite di pagine. Il codice è pubblicato con licenza aperta." } }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="css/stile.css">
+</head>
+<body>
+  <a class="salta" href="#principale">Vai al contenuto</a>
+
+  <header class="testata">
+    <div class="contenitore">
+      <div class="marchio" aria-hidden="true"><span class="marchio-blocco"></span><span class="marchio-blocco marchio-blocco--scuro"></span></div>
+      <div>
+        <h1 id="titolo-app">Oscuramento dei dati personali nei PDF</h1>
+        <p class="sottotitolo" id="sottotitolo-app"></p>
+      </div>
+    </div>
+  </header>
+
+  <div class="rassicurazione" role="note">
+    <div class="contenitore">
+      <p id="rassicurazione-locale"></p>
+    </div>
+  </div>
+
+  <main id="principale" class="contenitore">
+    <nav class="passi" aria-label="Avanzamento">
+      <ol id="passi"></ol>
+    </nav>
+
+    <!-- 1. Caricamento -->
+    <section id="sezione-caricamento" class="sezione" aria-labelledby="titolo-caricamento">
+      <h2 id="titolo-caricamento"></h2>
+
+      <div id="zona-caricamento" class="zona-caricamento" tabindex="0" role="button" aria-describedby="caricamento-formati">
+        <p><span id="caricamento-trascina"></span> <label for="file-input" class="collegamento" id="caricamento-scegli"></label></p>
+        <input type="file" id="file-input" accept="application/pdf,.pdf,image/jpeg,image/png,.jpg,.jpeg,.png,.p7m">
+        <p id="caricamento-formati" class="nota"></p>
+      </div>
+      <p id="caricamento-errore" class="errore" role="alert" hidden></p>
+      <!-- Stato dei componenti di riconoscimento: una riga, solo finché serve.
+           Gli stati per componente restano nel DOM (nascosti) per la logica. -->
+      <p id="componenti-stato" class="nota componenti-stato" role="status" aria-live="polite" hidden></p>
+      <div hidden aria-hidden="true">
+        <span id="comp-pdf-stato"></span><span id="comp-ocr-stato"></span><span id="comp-ner-stato"></span>
+      </div>
+      <div id="ner-remoto" class="avviso avviso--attenzione" hidden>
+        <p id="ner-remoto-spiegazione"></p>
+        <div class="azioni">
+          <button type="button" class="pulsante" id="ner-remoto-scarica"></button>
+          <button type="button" class="pulsante pulsante--secondario" id="ner-remoto-rifiuta"></button>
+        </div>
+        <p id="ner-remoto-rifiuto-nota" class="nota"></p>
+      </div>
+      <p id="ner-errore" class="errore" hidden></p>
+      <div id="file-scelto" class="riquadro" hidden>
+        <p><strong id="file-scelto-etichetta"></strong>: <span id="file-nome"></span> <span class="nota" id="file-dettagli"></span></p>
+        <fieldset class="scopo" id="scopo" hidden>
+          <legend id="scopo-titolo"></legend>
+          <p class="nota" id="scopo-spiegazione"></p>
+          <div id="scopo-opzioni" class="scopo-opzioni"></div>
+          <div class="campo" id="scopo-ente-campo" hidden>
+            <label for="scopo-ente" id="scopo-ente-etichetta"></label>
+            <input type="text" id="scopo-ente" maxlength="120">
+          </div>
+        </fieldset>
+        <p class="nota" id="attesa-componenti" hidden></p>
+      </div>
+    </section>
+
+    <!-- 2. Analisi -->
+    <section id="sezione-analisi" class="sezione" aria-labelledby="titolo-analisi" hidden>
+      <h2 id="titolo-analisi"></h2>
+      <div id="analisi-avviso-scansione" class="avviso avviso--attenzione" hidden></div>
+      <div id="analisi-avviso-risorse" class="avviso avviso--attenzione" hidden>
+        <p id="analisi-avviso-risorse-testo"></p>
+        <div class="azioni"><button type="button" class="pulsante" id="analisi-avviso-risorse-prosegui"></button></div>
+      </div>
+      <div class="avanzamento" role="status" aria-live="polite">
+        <p><span id="analisi-fase"></span> <span id="analisi-pagina" class="nota"></span></p>
+        <div class="barra" aria-hidden="true"><div class="barra-riempimento" id="analisi-barra"></div></div>
+        <div class="azioni"><button type="button" class="pulsante pulsante--secondario" id="analisi-interrompi"></button></div>
+      </div>
+      <p id="analisi-errore" class="errore" role="alert" hidden></p>
+    </section>
+
+    <!-- 3. Controlla e scarica -->
+    <section id="sezione-revisione" class="sezione" aria-labelledby="titolo-revisione" hidden>
+      <h2 id="titolo-revisione"></h2>
+      <p id="revisione-introduzione"></p>
+      <div id="revisione-avviso-scansione" class="avviso avviso--attenzione" hidden>
+        <p id="revisione-avviso-scansione-testo"></p>
+        <p><span id="revisione-qualita-etichetta"></span>: <strong id="revisione-qualita"></strong></p>
+      </div>
+      <p id="revisione-ner-assente" class="avviso avviso--attenzione" hidden></p>
+
+      <!-- Riepilogo in linguaggio piano: solo le eccezioni richiedono attenzione. -->
+      <div class="riepilogo" id="riepilogo">
+        <p class="riepilogo-oscurati" role="status" aria-live="polite"><strong id="riepilogo-oscurati-numero">0</strong> <span id="riepilogo-oscurati-testo"></span></p>
+        <div id="riepilogo-chiaro" hidden>
+          <h3 id="riepilogo-chiaro-titolo"></h3>
+          <p class="nota" id="riepilogo-chiaro-nota"></p>
+          <ul id="elenco-chiaro" class="riepilogo-elenco"></ul>
+        </div>
+        <div id="riepilogo-ripristinati" hidden>
+          <h3 id="riepilogo-ripristinati-titolo"></h3>
+          <ul id="elenco-ripristinati" class="riepilogo-elenco"></ul>
+        </div>
+        <div id="riepilogo-controllare" hidden>
+          <h3 id="riepilogo-controllare-titolo"></h3>
+          <ul id="elenco-controllare" class="riepilogo-elenco"></ul>
+        </div>
+        <details id="riepilogo-istituzionali" class="dettagli" hidden>
+          <summary id="riepilogo-istituzionali-titolo"></summary>
+          <ul id="elenco-istituzionali" class="riepilogo-elenco"></ul>
+        </details>
+        <p id="riepilogo-nessuno" class="nota" hidden></p>
+        <div id="download-scansione" class="riquadro" hidden>
+          <label class="opzione"><input type="checkbox" id="conferma-scansione"><span id="conferma-scansione-testo"></span></label>
+          <p class="nota" id="conferma-scansione-nota"></p>
+        </div>
+        <p id="download-bloccato" class="nota" hidden></p>
+        <div class="azioni">
+          <button type="button" class="pulsante" id="genera"></button>
+          <button type="button" class="pulsante pulsante--secondario" id="mostra-dettagli" aria-expanded="false" aria-controls="dettagli-rilievi pannello-rilievi"></button>
+        </div>
+        <div id="sezione-download">
+          <div class="avanzamento" id="generazione" hidden role="status" aria-live="polite">
+            <p><span id="generazione-testo"></span></p>
+            <div class="barra" aria-hidden="true"><div class="barra-riempimento" id="generazione-barra"></div></div>
+            <div class="azioni"><button type="button" class="pulsante pulsante--secondario" id="generazione-interrompi"></button></div>
+          </div>
+          <p id="download-errore" class="errore" role="alert" hidden></p>
+          <div id="download-pronto" class="riquadro riquadro--pronto" hidden>
+            <h3 id="download-riepilogo-titolo"></h3>
+            <ul id="download-riepilogo"></ul>
+            <div class="azioni">
+              <a class="pulsante" id="scarica-documento" download></a>
+              <a class="pulsante pulsante--secondario" id="scarica-rapporto" download></a>
+              <a class="pulsante pulsante--secondario" id="scarica-immagine" download hidden></a>
+            </div>
+            <p class="nota" id="download-nota"></p>
+            <p class="nota" id="download-avviso-firma"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strumenti per l'utente esperto: visibili su richiesta. -->
+      <div id="dettagli-rilievi" hidden>
+        <div class="contatori">
+          <div class="contatore" id="contatore-c" role="status" aria-live="polite">
+            <span class="contatore-numero" id="contatore-c-numero">0</span>
+            <span id="contatore-c-testo"></span>
+          </div>
+          <div class="contatore contatore--proposte" id="contatore-proposte" role="status" aria-live="polite">
+            <span class="contatore-numero" id="contatore-proposte-numero">0</span>
+            <span id="contatore-proposte-testo"></span>
+            <button type="button" class="pulsante pulsante--piccolo" id="conferma-proposte"></button>
+          </div>
+        </div>
+        <div class="blocco">
+          <label for="blocco-categoria" id="blocco-etichetta"></label>
+          <select id="blocco-categoria"></select>
+          <button type="button" class="pulsante pulsante--piccolo" id="blocco-oscura"></button>
+          <button type="button" class="pulsante pulsante--piccolo pulsante--secondario" id="blocco-mantieni"></button>
+        </div>
+      </div>
+
+      <div class="revisione revisione--semplice" id="revisione-griglia">
+        <div class="revisione-pagine" id="pagine">
+          <div class="barra-strumenti">
+            <span class="nota" id="strumenti-etichetta"></span>
+            <button type="button" class="pulsante pulsante--secondario pulsante--piccolo" id="selezione-manuale" aria-pressed="false"></button>
+            <button type="button" class="pulsante pulsante--secondario pulsante--piccolo" id="selezione-testo"></button>
+            <button type="button" class="pulsante pulsante--secondario pulsante--piccolo" id="selezione-area"></button>
+            <span class="nota" id="selezione-manuale-nota" hidden></span>
+            <span class="nota" id="pagine-viste"></span>
+          </div>
+          <div id="elenco-pagine"></div>
+        </div>
+        <aside class="revisione-pannello" id="pannello-rilievi" aria-labelledby="titolo-rilievi" hidden>
+          <h3 id="titolo-rilievi" class="visivamente-nascosto">Dati trovati</h3>
+          <div class="filtro">
+            <label for="filtro-fascia" id="filtro-etichetta"></label>
+            <select id="filtro-fascia"></select>
+          </div>
+          <div class="legenda" id="legenda"></div>
+          <ul id="elenco-rilievi" class="rilievi"></ul>
+          <p id="rilievi-vuoto" class="nota" hidden></p>
+        </aside>
+      </div>
+
+      <details class="dettagli" id="opzioni-avanzate">
+        <summary id="opzioni-avanzate-titolo"></summary>
+        <div id="sezione-modalita">
+          <p id="modalita-introduzione"></p>
+          <fieldset class="modalita">
+            <legend id="titolo-modalita"></legend>
+            <label class="opzione"><input type="radio" name="modalita" value="pieno" checked><span><strong id="modalita-pieno"></strong><br><span class="nota" id="modalita-pieno-descrizione"></span></span></label>
+            <label class="opzione"><input type="radio" name="modalita" value="omissis"><span><strong id="modalita-omissis"></strong><br><span class="nota" id="modalita-omissis-descrizione"></span></span></label>
+            <label class="opzione"><input type="radio" name="modalita" value="pseudonimo"><span><strong id="modalita-pseudonimo"></strong><br><span class="nota" id="modalita-pseudonimo-descrizione"></span></span></label>
+          </fieldset>
+          <div id="modalita-avvertenza" class="avviso avviso--attenzione" hidden></div>
+          <details class="dettagli">
+            <summary id="iniziali-domanda"></summary>
+            <p id="iniziali-risposta"></p>
+          </details>
+          <div class="campo">
+            <label for="risoluzione" id="risoluzione-etichetta"></label>
+            <p class="nota" id="risoluzione-descrizione"></p>
+            <select id="risoluzione"></select>
+          </div>
+        </div>
+      </details>
+
+      <div class="azioni azioni--separate">
+        <button type="button" class="pulsante pulsante--secondario" id="nuovo-documento"></button>
+      </div>
+    </section>
+
+    <!-- Testo informativo, statico: per chi legge la pagina e per i motori di
+         ricerca. Non è interfaccia e non passa da stringhe.js. -->
+    <details class="sezione informazioni" id="informazioni">
+      <summary class="informazioni-apri">Come funziona, cosa riconosce, limiti e domande frequenti</summary>
+      <h2 id="titolo-informazioni">Come funziona</h2>
+      <ol class="informazioni-passi">
+        <li><strong>Carichi il documento</strong> (PDF, anche firmato o in busta .p7m; oppure una foto o scansione JPG o PNG) e indichi a cosa serve: pubblicazione obbligatoria di un ente pubblico, oppure invio e condivisione. L'analisi parte da sola.</li>
+        <li><strong>Lo strumento legge il documento</strong> (anche le scansioni, con il riconoscimento ottico) e individua i dati personali: per ciascuno indica cos'è, perché va trattato e quale norma lo prevede.</li>
+        <li><strong>Rivedi e confermi</strong>, pagina per pagina o in blocco. Puoi aggiungere oscuramenti a mano, per testo o per area.</li>
+        <li><strong>Scarichi il PDF trattato e il rapporto</strong>: il testo oscurato non è più nel file, nemmeno nascosto; il rapporto elenca ogni dato trattato con la fonte.</li>
+      </ol>
+
+      <h2>Il file non lascia il tuo computer</h2>
+      <p>Gli strumenti online per oscurare i PDF caricano il documento sui loro server. Qui no: la lettura del PDF, il riconoscimento ottico, il riconoscimento dei nomi e la scrittura del nuovo file avvengono nel tuo browser, con componenti eseguite in locale. Non esiste un server che riceva il documento, non c'è registrazione, non vengono raccolte statistiche. È verificabile: apri gli strumenti di sviluppo del browser, scheda Rete, e usa lo strumento.</p>
+      <p>L'unica eccezione, dichiarata e facoltativa, è il download iniziale del modello di riconoscimento dei nomi (circa 135 MB), che avviene una sola volta, prima di caricare qualunque documento, e resta nella cache del browser.</p>
+
+      <h2>Cosa riconosce</h2>
+      <ul class="informazioni-elenco">
+        <li><strong>Identificativi</strong>: codice fiscale e tessera sanitaria, partita IVA, IBAN, conti correnti, carte di pagamento (con controllo formale).</li>
+        <li><strong>Recapiti e dati anagrafici</strong>: cellulari e telefoni individuali, caselle di posta personali, residenza, data e luogo di nascita, stato civile, nucleo familiare. I recapiti degli uffici e delle società restano in chiaro.</li>
+        <li><strong>Documenti d'identità</strong>: estremi (numero, rilascio) e pagine che riproducono una carta d'identità, una patente o un passaporto, che vengono espunte.</li>
+        <li><strong>Firme autografe</strong> nei documenti scansionati.</li>
+        <li><strong>Nomi di persona</strong>, con il ruolo: dirigenti, responsabili del procedimento e firmatari restano in chiaro; minori e terzi estranei vengono oscurati; beneficiari, contraenti e consulenti seguono le norme sulla pubblicazione.</li>
+        <li><strong>Dati sulla salute, condizioni di disagio, dati giudiziari</strong>, anche in forma indiretta (legge 104, invalidità, ISEE, procedimenti).</li>
+      </ul>
+
+      <h2>Per gli uffici pubblici</h2>
+      <p>Determine, delibere, ordinanze, atti di concessione di contributi, incarichi e curricula, graduatorie di concorso: prima della pubblicazione all'albo pretorio, in Amministrazione trasparente o sul sito istituzionale (in Sicilia, art. 18 l.r. 22/2008) i dati personali non pertinenti vanno resi non intelligibili (art. 7-bis, comma 4, d.lgs. 33/2013). Lo strumento applica le regole delle Linee guida del Garante n. 243/2014 e delle FAQ, distingue i nominativi che la legge impone di pubblicare (contraenti, titolari di incarichi, beneficiari sopra mille euro) da quelli che non hanno base giuridica, e produce un rapporto di trattamento con i passaggi delle fonti, da conservare agli atti. Non offre mai la sostituzione con le iniziali, che il Garante non considera anonimizzazione.</p>
+
+      <h2>Per tutti gli altri</h2>
+      <p>Un documento da inviare a una banca o a un ente, un curriculum da rendere anonimo, un verbale, una sentenza, un referto da condividere: scegli "Invio, condivisione o pubblicazione facoltativa" e tutto ciò che viene riconosciuto viene proposto per l'oscuramento. Ripristini con un clic ciò che vuoi lasciare leggibile.</p>
+
+      <h2>Limiti da conoscere</h2>
+      <ul class="informazioni-elenco">
+        <li>Il riconoscimento dei nomi è statistico: può ignorare un nome o segnalare una parola comune. Per questo i nomi sono sempre "da confermare" e la revisione a schermo è parte del lavoro, non un passaggio facoltativo.</li>
+        <li>Nelle scansioni la qualità dipende dall'immagine; per i documenti scansionati la revisione di ogni pagina è obbligatoria e il download resta bloccato finché non è stata fatta.</li>
+        <li>Documenti lunghi e scansionati richiedono memoria: consigliato un computer, non un telefono.</li>
+        <li>Lo strumento assiste e documenta; la decisione finale su cosa pubblicare resta di chi pubblica.</li>
+      </ul>
+
+      <h2>Domande frequenti</h2>
+      <dl class="informazioni-faq">
+        <dt>L'oscuramento è definitivo?</dt>
+        <dd>Sì: le pagine vengono riscritte come immagini con le coperture e il livello testuale del nuovo PDF contiene solo il testo non oscurato. Conserva l'originale: dal file trattato non si torna indietro.</dd>
+        <dt>Cosa contiene il rapporto?</dt>
+        <dd>Data, file, scopo del trattamento, elenco dei dati trattati con pagina, posizione, categoria, fascia, grado di certezza del riconoscimento, esito e fonte normativa; le decisioni prese e le motivazioni; i passaggi delle fonti citate.</dd>
+        <dt>Posso caricare un file di Word?</dt>
+        <dd>Salvalo prima come PDF (in Word: File → Salva con nome → PDF) e caricalo qui: il PDF conserva il testo e viene trattato al meglio. Le immagini JPG e PNG e le buste di firma .p7m si caricano direttamente.</dd>
+        <dt>Funziona senza connessione?</dt>
+        <dd>Dopo il primo caricamento sì: le componenti restano nella cache del browser. Esiste anche una versione da scaricare e avviare in locale.</dd>
+        <dt>Chi risponde di un dato pubblicato per errore?</dt>
+        <dd>Chi pubblica. Lo strumento è un ausilio: propone, spiega e documenta, ma non sostituisce la verifica di chi ha la responsabilità del documento.</dd>
+      </dl>
+    </details>
+  </main>
+
+  <footer class="piede">
+    <div class="contenitore">
+      <p class="nota"><a href="note-legali.html">Note legali: licenza, informativa sulla privacy, condizioni d'uso</a></p>
+      <p class="firma"><span class="firma-monogramma" aria-hidden="true">GLM</span><span class="firma-testo">Progettato e sviluppato da <strong>Giorgio La Malfa</strong> · © 2026 · Licenza EUPL-1.2</span></p>
+    </div>
+  </footer>
+
+  <!-- Finestra di dialogo per motivazione e oscuramento manuale -->
+  <dialog id="dialogo" class="dialogo">
+    <form method="dialog" id="dialogo-form">
+      <h3 id="dialogo-titolo"></h3>
+      <p id="dialogo-testo" class="nota"></p>
+      <div id="dialogo-testo-campo" class="campo" hidden>
+        <label for="dialogo-testo-cerca" id="dialogo-testo-etichetta"></label>
+        <input type="text" id="dialogo-testo-cerca" maxlength="200">
+        <p id="dialogo-testo-nota" class="nota"></p>
+      </div>
+      <fieldset id="dialogo-area-campo" class="campo coordinate" hidden>
+        <legend id="dialogo-area-etichetta"></legend>
+        <label><span id="dialogo-area-pagina-etichetta"></span> <input type="number" id="dialogo-area-pagina" min="1" step="1"></label>
+        <label><span id="dialogo-area-sinistra-etichetta"></span> <input type="number" id="dialogo-area-sinistra" min="0" max="100" step="1"></label>
+        <label><span id="dialogo-area-alto-etichetta"></span> <input type="number" id="dialogo-area-alto" min="0" max="100" step="1"></label>
+        <label><span id="dialogo-area-larghezza-etichetta"></span> <input type="number" id="dialogo-area-larghezza" min="1" max="100" step="1"></label>
+        <label><span id="dialogo-area-altezza-etichetta"></span> <input type="number" id="dialogo-area-altezza" min="1" max="100" step="1"></label>
+      </fieldset>
+      <div id="dialogo-categoria-campo" class="campo" hidden>
+        <label for="dialogo-categoria" id="dialogo-categoria-etichetta"></label>
+        <select id="dialogo-categoria" required></select>
+      </div>
+      <div class="campo">
+        <label for="dialogo-motivazione" id="dialogo-motivazione-etichetta"></label>
+        <textarea id="dialogo-motivazione" rows="3"></textarea>
+        <p id="dialogo-obbligo" class="errore" hidden></p>
+      </div>
+      <div class="azioni">
+        <button type="button" class="pulsante pulsante--secondario" id="dialogo-annulla"></button>
+        <button type="submit" class="pulsante" id="dialogo-salva"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="vendor/pdf-lib/pdf-lib.min.js"></script>
+  <script src="vendor/tesseract/tesseract.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

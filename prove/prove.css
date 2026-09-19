@@ -1,0 +1,13 @@
+/* Stili propri della suite di prova (prove/index.html). */
+.prove-comandi { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
+.prove-stato { font-size: 0.9rem; color: var(--testo-secondario); }
+.prove-riepilogo { font-weight: 600; margin: 12px 0; }
+.prove-tabella { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.prove-tabella th, .prove-tabella td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--linea); }
+.prove-tabella .esito-ok { color: var(--fascia-p); font-weight: 600; }
+.prove-tabella .esito-err { color: var(--rosso); font-weight: 600; }
+.prove-tabella .id { font-family: monospace; font-size: 0.85rem; color: var(--testo-secondario); }
+.prove-tabella ul { margin: 0; padding-left: 18px; }
+.prove-tabella details { margin-top: 4px; }
+.prove-tabella summary { cursor: pointer; color: var(--testo-secondario); font-size: 0.85rem; }
+.prove-tabella .rilievi li { font-family: monospace; font-size: 0.8rem; }

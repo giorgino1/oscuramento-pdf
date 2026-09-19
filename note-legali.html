@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!-- Oscuramento assistito di atti amministrativi. © 2026 Giorgio La Malfa. Licenza EUPL-1.2. -->
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'none'; connect-src 'none'; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Note legali – Oscuramento assistito</title>
+  <meta name="description" content="Licenza del progetto, componenti di terze parti, informativa sulla privacy e condizioni d'uso dello strumento di oscuramento dei dati personali nei PDF.">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/stile.css">
+</head>
+<body>
+  <a class="salta" href="#principale">Vai al contenuto</a>
+  <header class="testata">
+    <div class="contenitore">
+      <div class="marchio" aria-hidden="true"><span class="marchio-blocco"></span><span class="marchio-blocco marchio-blocco--scuro"></span></div>
+      <div>
+        <h1>Note legali</h1>
+        <p class="sottotitolo"><a href="./">Torna allo strumento</a></p>
+      </div>
+    </div>
+  </header>
+
+  <main id="principale" class="contenitore">
+    <section class="sezione informazioni" aria-labelledby="titolo-stato">
+      <h2 id="titolo-autore">Autore</h2>
+      <p>Lo strumento è progettato e sviluppato da <strong>Giorgio La Malfa</strong>, che ne è l'autore e il titolare dei diritti (© 2026), e che pubblica questa pagina a titolo personale, senza rappresentare alcun ente. Lo sviluppo si è avvalso di strumenti di intelligenza artificiale; le scelte di regola, le fonti e le verifiche sono dell'autore.</p>
+      <p>Recapito per le comunicazioni previste da queste note (informativa, licenza): <span id="recapito-autore">indicato nella pagina di pubblicazione del progetto</span>.</p>
+
+      <h2 id="titolo-stato">Stato del progetto</h2>
+      <p>Lo strumento è pubblicato così com'è, senza un servizio di assistenza e senza garanzia di aggiornamento. Le regole e le fonti normative sono aggiornate alla data indicata nel rapporto di trattamento ("Base delle fonti aggiornata al …"); il rapporto dichiara per ogni fonte se il testo è stato riscontrato sul testo ufficiale vigente. Chi usa lo strumento dopo quella data verifica da sé che le norme citate siano ancora in vigore.</p>
+      <p>Il codice è aperto: chiunque può leggerlo, copiarlo, correggerlo e pubblicarne una versione propria alle condizioni della licenza.</p>
+
+      <h2 id="titolo-licenza">Licenza del progetto</h2>
+      <p>Il codice, le regole e i testi di questo progetto (© 2026 Giorgio La Malfa) sono rilasciati con la <strong>Licenza Pubblica dell'Unione Europea, versione 1.2 (EUPL-1.2)</strong>, il cui testo ufficiale in italiano è pubblicato dalla Commissione europea. La licenza consente l'uso, la copia, la modifica e la ridistribuzione, anche a fini commerciali, a condizione di conservare l'attribuzione e di rilasciare le versioni modificate con la stessa licenza (o con una licenza compatibile). Il software è fornito "così com'è", senza garanzie, nei limiti previsti dalla licenza.</p>
+
+      <h2 id="titolo-terze-parti">Componenti di terze parti</h2>
+      <p>Lo strumento incorpora componenti aperte di altri autori; i testi delle licenze accompagnano ciascuna componente nel codice pubblicato.</p>
+      <ul class="informazioni-elenco">
+        <li><strong>pdf.js</strong> (Mozilla) — lettura e resa dei PDF — Apache 2.0. Include i caratteri standard Foxit/PDFium (BSD) e Liberation (SIL Open Font License) e le CMap di Adobe (BSD).</li>
+        <li><strong>pdf-lib</strong> (Andrew Dillon) — scrittura del PDF trattato e del rapporto — MIT.</li>
+        <li><strong>tesseract.js</strong> e <strong>tesseract-core</strong> — riconoscimento ottico — Apache 2.0; dati di lingua italiana del progetto tessdata — Apache 2.0.</li>
+        <li><strong>transformers.js</strong> (Hugging Face) — esecuzione del modello — Apache 2.0; include <strong>ONNX Runtime Web</strong> (Microsoft) — MIT.</li>
+        <li><strong>Modello di riconoscimento dei nomi</strong> <code>distilbert-base-multilingual-cased-ner-hrl</code> di David Adelani, conversione ONNX di Xenova — Academic Free License 3.0 (licenza aperta approvata OSI; l'attribuzione è conservata).</li>
+      </ul>
+
+      <h2 id="titolo-privacy">Informativa sulla protezione dei dati personali</h2>
+      <p><strong>I documenti che tratti con lo strumento non vengono trasmessi a nessuno.</strong> La lettura del PDF, il riconoscimento dei dati e la scrittura del nuovo file avvengono nel tuo browser. Chi pubblica questa pagina non riceve, non vede e non conserva i tuoi documenti, il loro testo, i dati riconosciuti o i risultati: non c'è alcun trattamento di questi dati da parte sua.</p>
+      <p><strong>Log di accesso.</strong> Il server locale incluso nel progetto non registra alcun accesso. Se la pagina è pubblicata su un servizio di hosting, questo può registrare i dati tecnici delle richieste (indirizzo IP, data e ora, pagina o file richiesto, tipo di browser) per il funzionamento e la sicurezza del servizio, secondo la propria configurazione. Titolare di questo trattamento è Giorgio La Malfa, che pubblica la pagina; il servizio di hosting agisce come responsabile del trattamento secondo i propri termini. Base giuridica: legittimo interesse alla sicurezza e al funzionamento del sito (art. 6, par. 1, lett. f, Regolamento (UE) 2016/679). Conservazione: quella tecnica prevista dal servizio di hosting. I log non vengono incrociati con altri dati e non servono a identificarti.</p>
+      <p><strong>Download del modello.</strong> Se il modello di riconoscimento dei nomi non è presente nella cartella dell'applicazione, lo strumento ti chiede il consenso a scaricarlo una sola volta da huggingface.co: quella richiesta raggiunge i server di Hugging Face con il tuo indirizzo IP, come una qualunque richiesta web, e nulla del tuo documento (che non è ancora stato caricato). Se rifiuti, lo strumento funziona senza riconoscimento dei nomi.</p>
+      <p><strong>Cookie e memorizzazione nel browser.</strong> La pagina non usa cookie, né propri né di terzi, e non contiene script di statistica o di tracciamento. Il browser conserva nella propria cache le componenti scaricate (motore di riconoscimento ottico, modello dei nomi) per non scaricarle di nuovo: è memorizzazione tecnica necessaria al funzionamento, che puoi cancellare dalle impostazioni del browser.</p>
+      <p><strong>Diritti.</strong> Per i soli log di accesso puoi esercitare i diritti previsti dagli artt. 15-22 del Regolamento (UE) 2016/679 scrivendo al recapito indicato sopra, e proporre reclamo al Garante per la protezione dei dati personali.</p>
+
+      <h2 id="titolo-condizioni">Condizioni d'uso</h2>
+      <ol class="informazioni-passi">
+        <li><strong>Natura dello strumento.</strong> Lo strumento è un ausilio: individua i dati personali, propone come trattarli, spiega la regola applicata e documenta ciò che è stato fatto. Non decide al posto tuo e non sostituisce la valutazione di chi pubblica o invia il documento, che resta l'unico responsabile del trattamento e della diffusione.</li>
+        <li><strong>Nessuna garanzia di completezza.</strong> Il riconoscimento dei dati è in parte statistico e può omettere un dato o segnalarne uno non pertinente. La revisione a schermo del documento trattato, prima di pubblicarlo o inviarlo, è parte necessaria dell'uso. Lo strumento non attesta la conformità di alcun documento a norme di legge.</li>
+        <li><strong>Nessuna consulenza.</strong> Le norme e i provvedimenti citati sono riportati a titolo informativo, con l'indicazione della data di consultazione e dello stato di verifica; non costituiscono consulenza legale e vanno verificati sul testo ufficiale vigente.</li>
+        <li><strong>Responsabilità.</strong> Lo strumento è fornito gratuitamente, "così com'è", senza garanzie espresse o implicite. Nei limiti consentiti dalla legge, chi pubblica la pagina non risponde dei danni derivanti dall'uso o dall'impossibilità d'uso dello strumento, dalla pubblicazione o dall'invio di documenti trattati con esso, o da errori od omissioni nel riconoscimento dei dati. Resta ferma la responsabilità per dolo o colpa grave (art. 1229 c.c.).</li>
+        <li><strong>Uso corretto.</strong> Lo strumento serve a proteggere i dati delle persone. Chi lo usa risponde della liceità dei documenti trattati e dell'uso che ne fa.</li>
+        <li><strong>Modifiche.</strong> Lo strumento e queste condizioni possono cambiare senza preavviso; la versione delle regole applicata è indicata nel rapporto di trattamento.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="piede">
+    <div class="contenitore">
+      <p class="nota"><a href="./">Torna allo strumento</a></p>
+      <p class="firma"><span class="firma-monogramma" aria-hidden="true">GLM</span><span class="firma-testo">Progettato e sviluppato da <strong>Giorgio La Malfa</strong> · © 2026 · Licenza EUPL-1.2</span></p>
+    </div>
+  </footer>
+</body>
+</html>

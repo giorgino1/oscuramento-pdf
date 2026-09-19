@@ -1,0 +1,1 @@
+Il modello di riconoscimento dei nomi non è incluso: viene scaricato da huggingface.co, una sola volta e solo con il consenso dell'utente, e conservato nella cache del browser. Per includerlo in locale copiare qui la cartella Xenova/ del progetto.

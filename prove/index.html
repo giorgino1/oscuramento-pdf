@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' blob:; worker-src 'self' blob:; connect-src 'self'; img-src 'self' blob: data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Suite di prova – Oscuramento assistito</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../css/stile.css">
+  <link rel="stylesheet" href="prove.css">
+</head>
+<body>
+  <header class="testata">
+    <div class="contenitore">
+      <h1>Suite di prova delle regole</h1>
+      <p class="sottotitolo">Esegue i casi di <code>prove/casi.js</code> con le regole correnti. Nessun documento viene caricato; tutto avviene in questa pagina.</p>
+    </div>
+  </header>
+  <main class="contenitore">
+    <section class="sezione">
+      <div class="prove-comandi">
+        <button type="button" class="pulsante" id="esegui-simulato">Esegui con nomi simulati</button>
+        <button type="button" class="pulsante pulsante--secondario" id="esegui-reale" disabled>Esegui con il modello dei nomi</button>
+        <span id="stato-modello" class="prove-stato">Modello dei nomi: verifica in corso…</span>
+      </div>
+      <p class="nota">Con i nomi simulati si provano le regole (esito atteso sempre riproducibile). Con il modello reale si prova anche il riconoscimento dei nomi: un esito diverso indica un limite del modello sul frammento, non necessariamente un errore delle regole.</p>
+      <p id="riepilogo" class="prove-riepilogo" hidden></p>
+      <table class="prove-tabella" id="tabella" hidden>
+        <thead><tr><th>Esito</th><th>Caso</th><th>Dettagli</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+  <footer class="piede">
+    <div class="contenitore">
+      <p class="nota"><a href="../">Torna allo strumento</a></p>
+      <p class="firma"><span class="firma-monogramma" aria-hidden="true">GLM</span><span class="firma-testo">Progettato e sviluppato da <strong>Giorgio La Malfa</strong> · © 2026 · Licenza EUPL-1.2</span></p>
+    </div>
+  </footer>
+  <script type="module" src="prove.js"></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+# Provvisorio, fino al lancio: poi sostituire con "Allow: /" e aggiungere la sitemap.
