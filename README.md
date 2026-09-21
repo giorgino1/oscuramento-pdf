@@ -16,6 +16,21 @@ database, nessun account, nessuna statistica.
 Lo strumento assiste, non decide: la valutazione finale resta
 dell'amministrazione.
 
+**Versione in linea**: <https://giorgino1.github.io/oscuramento-pdf/>
+(pagine statiche servite da GitHub Pages; il modello di riconoscimento dei
+nomi viene scaricato una sola volta, con il consenso dell'utente, da
+huggingface.co). Note legali, informativa e condizioni d'uso:
+<https://giorgino1.github.io/oscuramento-pdf/note-legali.html>.
+
+## Segnalazioni e contatti
+
+Segnalazioni di errori, proposte di correzione alle regole e ogni
+comunicazione prevista dalle note legali (informativa, licenza) vanno
+inviate tramite le *Issues* di questo repository:
+<https://github.com/giorgino1/oscuramento-pdf/issues>. Non indicare nelle
+segnalazioni dati personali reali né allegare atti non ancora oscurati: un
+frammento fittizio che riproduce il problema è sufficiente.
+
 ## Avvio
 
 Il progetto è statico: basta servire la cartella con un qualunque server web.

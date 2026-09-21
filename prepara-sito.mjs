@@ -15,7 +15,7 @@ const destinazione = resolve(process.argv[2] || join(qui, '..', 'oscuramento-pdf
 
 // Cosa pubblicare (cartelle e file, relativi al progetto).
 const DA_COPIARE = [
-  'index.html', 'note-legali.html', 'robots.txt', '.nojekyll',
+  'index.html', 'note-legali.html', 'robots.txt', 'sitemap.xml', '.nojekyll',
   'css', 'js', 'vendor', 'prove', 'esempi',
   'README.md', 'LICENZA.md', 'LICENZE-TERZE-PARTI.md', 'AGENTS.md', 'CLAUDE.md',
   'regole-oscuramento.md', 'specifica-funzionale.md',

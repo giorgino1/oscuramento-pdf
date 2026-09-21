@@ -1,3 +1,5 @@
 User-agent: *
-Disallow: /
-# Provvisorio, fino al lancio: poi sostituire con "Allow: /" e aggiungere la sitemap.
+Allow: /
+# La suite di prova non è una pagina da indicizzare.
+Disallow: /prove/
+Sitemap: https://giorgino1.github.io/oscuramento-pdf/sitemap.xml
