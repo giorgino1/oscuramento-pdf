@@ -263,6 +263,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   align-items: start;
 }
 .revisione-pagine { min-width: 0; }
+.pagine-fine { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 12px 0 0; }
+.pagine-fine[hidden] { display: none; }
+#conferma-scansione-vai { margin-top: 6px; }
 .revisione--semplice { grid-template-columns: minmax(0, 1fr); }
 
 /* Riepilogo in linguaggio piano. */

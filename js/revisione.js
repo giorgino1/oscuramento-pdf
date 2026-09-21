@@ -247,6 +247,15 @@ export class Revisione {
     }
   }
 
+  // Porta l'anteprima alla pagina indicata (dall'alto, così che la pagina
+  // risulti guardata secondo il criterio di controllaVisibilita).
+  mostraPagina(numero) {
+    const cont = this.contenitori.get(numero);
+    if (!cont) return;
+    this.rendi(numero);
+    cont.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+
   vaiAllaPagina(r) {
     const cont = this.contenitori.get(r.pagina);
     if (!cont) return;

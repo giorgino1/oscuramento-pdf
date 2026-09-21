@@ -246,7 +246,14 @@ export const T = {
     avvisoFirma:
       'Il documento prodotto è un file nuovo e non reca più la sottoscrizione digitale dell’originale. Valuta con il tuo ufficio come attestarne la conformità all’atto originale prima della pubblicazione.',
     confermaScansione: 'Confermo di aver guardato tutte le pagine del documento scansionato nell\u2019anteprima.',
-    confermaScansioneBloccata: 'Documento da scansione: scorri tutte le pagine dell\u2019anteprima, poi spunta la conferma.',
+    // {viste} e {totale} vengono sostituiti con i conteggi correnti.
+    confermaScansioneBloccata: 'Documento da scansione: la casella si attiva dopo che hai guardato tutte le pagine nell\u2019anteprima qui sotto. Pagine guardate: {viste} di {totale}.',
+    confermaScansioneVai: 'Vai alla prossima pagina da guardare',
+    pagineFineTutte: 'Hai guardato tutte le pagine.',
+    pagineFineMancano: 'Non tutte le pagine risultano guardate ({viste} di {totale}).',
+    pagineFineTorna: 'Torna alla conferma',
+    bloccatoScansionePagine: 'Guarda tutte le pagine nell’anteprima ({viste} di {totale}), poi spunta la conferma.',
+    bloccatoScansioneConferma: 'Spunta la conferma della revisione a schermo per scaricare.',
     bloccatoC: 'Decidi prima i dati da controllare.',
     bloccatoProposte: 'Conferma o modifica le proposte per proseguire.',
     genera: 'Confermo e scarico',

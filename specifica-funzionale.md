@@ -70,7 +70,11 @@ Il download resta bloccato finché restano dati da controllare.
 Per i documenti acquisiti da scansione la revisione è obbligatoria e non
 saltabile, e va mostrato un avviso: il riconoscimento ottico può non individuare
 tutto il testo, in particolare su scansioni di scarsa qualità, e un dato letto
-in modo errato non viene classificato come dato da oscurare.
+in modo errato non viene classificato come dato da oscurare. La conferma si
+attiva solo dopo che tutte le pagine sono state guardate nell'anteprima; il
+vincolo dev'essere evidente: contatore delle pagine guardate accanto alla
+conferma, pulsante che porta alla prossima pagina da guardare, richiamo in
+fondo all'anteprima per tornare alla conferma.
 
 ## 4. Documento in uscita
 

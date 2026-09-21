@@ -171,7 +171,8 @@
         <p id="riepilogo-nessuno" class="nota" hidden></p>
         <div id="download-scansione" class="riquadro" hidden>
           <label class="opzione"><input type="checkbox" id="conferma-scansione"><span id="conferma-scansione-testo"></span></label>
-          <p class="nota" id="conferma-scansione-nota"></p>
+          <p class="nota" id="conferma-scansione-nota" aria-live="polite"></p>
+          <button type="button" class="pulsante pulsante--secondario pulsante--piccolo" id="conferma-scansione-vai" hidden></button>
         </div>
         <p id="download-bloccato" class="nota" hidden></p>
         <div class="azioni">
@@ -231,6 +232,11 @@
             <span class="nota" id="pagine-viste"></span>
           </div>
           <div id="elenco-pagine"></div>
+          <p class="nota pagine-fine" id="pagine-fine" hidden>
+            <span id="pagine-fine-testo"></span>
+            <button type="button" class="pulsante pulsante--secondario pulsante--piccolo" id="pagine-fine-torna"></button>
+            <button type="button" class="pulsante pulsante--secondario pulsante--piccolo" id="pagine-fine-vai" hidden></button>
+          </p>
         </div>
         <aside class="revisione-pannello" id="pannello-rilievi" aria-labelledby="titolo-rilievi" hidden>
           <h3 id="titolo-rilievi" class="visivamente-nascosto">Dati trovati</h3>

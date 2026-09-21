@@ -133,7 +133,9 @@ function riempiTesti() {
   testo('download-avviso-firma', D.avvisoFirma);
   testo('download-bloccato', '');
   testo('conferma-scansione-testo', D.confermaScansione);
-  testo('conferma-scansione-nota', D.confermaScansioneBloccata);
+  testo('conferma-scansione-vai', D.confermaScansioneVai);
+  testo('pagine-fine-torna', D.pagineFineTorna);
+  testo('pagine-fine-vai', D.confermaScansioneVai);
   testo('genera', D.genera);
   testo('generazione-interrompi', T.analisi.interrompi);
   testo('download-riepilogo-titolo', D.riepilogo);
@@ -702,6 +704,12 @@ function preparaModalita() {
 // 5. Download
 // ---------------------------------------------------------------------------
 function preparaDownload() {
+  el('conferma-scansione-vai').addEventListener('click', vaiAllaProssimaPaginaDaGuardare);
+  el('pagine-fine-vai').addEventListener('click', vaiAllaProssimaPaginaDaGuardare);
+  el('pagine-fine-torna').addEventListener('click', () => {
+    el('download-scansione').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el('conferma-scansione').focus({ preventScroll: true });
+  });
   el('conferma-scansione').addEventListener('change', () => {
     // Senza la conferma della revisione non resta disponibile alcun download.
     if (!el('conferma-scansione').checked) invalidaRisultato();
@@ -731,8 +739,8 @@ function requisitiDownload({ conProposte = false } = {}) {
   if (doc.daScansione) {
     // Revisione obbligatoria e non saltabile per le scansioni.
     const tutteViste = doc.pagine.every((p) => stato.pagineViste.has(p.numero));
-    if (!tutteViste) return { ok: false, motivo: T.download.confermaScansioneBloccata };
-    if (!el('conferma-scansione').checked) return { ok: false, motivo: T.download.confermaScansione };
+    if (!tutteViste) return { ok: false, motivo: testoPagineViste(T.download.bloccatoScansionePagine) };
+    if (!el('conferma-scansione').checked) return { ok: false, motivo: T.download.bloccatoScansioneConferma };
   }
   return { ok: true, motivo: '' };
 }
@@ -744,11 +752,36 @@ function aggiornaDownload() {
   const tutteViste = doc.pagine.every((p) => stato.pagineViste.has(p.numero));
   el('conferma-scansione').disabled = !tutteViste;
   mostra(el('conferma-scansione-nota'), !tutteViste);
+  // La revisione a schermo delle scansioni è obbligatoria (CLAUDE.md): la
+  // casella resta disattivata finché tutte le pagine non sono state guardate.
+  // Il vincolo deve però essere evidente: contatore aggiornato, un pulsante
+  // che porta alla prossima pagina da guardare e, in fondo all'anteprima, un
+  // richiamo per tornare alla conferma.
+  el('conferma-scansione-nota').textContent = testoPagineViste(T.download.confermaScansioneBloccata);
+  mostra(el('conferma-scansione-vai'), doc.daScansione && !tutteViste);
+  mostra(el('pagine-fine'), doc.daScansione);
+  el('pagine-fine-testo').textContent = tutteViste ? T.download.pagineFineTutte : testoPagineViste(T.download.pagineFineMancano);
+  mostra(el('pagine-fine-torna'), tutteViste);
+  mostra(el('pagine-fine-vai'), !tutteViste);
   el('genera').disabled = !req.ok || stato.inGenerazione;
   el('genera').textContent = stato.risultato ? T.download.rigenera : T.download.genera;
   mostra(el('download-bloccato'), !req.ok && !!req.motivo);
   el('download-bloccato').textContent = req.motivo;
   impostaPasso(2);
+}
+
+// Sostituisce {viste} e {totale} con i conteggi delle pagine guardate.
+function testoPagineViste(modello) {
+  const doc = stato.documento;
+  const viste = doc ? doc.pagine.filter((p) => stato.pagineViste.has(p.numero)).length : 0;
+  return modello.replace('{viste}', String(viste)).replace('{totale}', String(doc ? doc.pagine.length : 0));
+}
+
+// Porta l'anteprima alla prima pagina non ancora guardata.
+function vaiAllaProssimaPaginaDaGuardare() {
+  const doc = stato.documento;
+  const prossima = doc?.pagine.find((p) => !stato.pagineViste.has(p.numero));
+  if (prossima && revisione) revisione.mostraPagina(prossima.numero);
 }
 
 function invalidaRisultato() {
