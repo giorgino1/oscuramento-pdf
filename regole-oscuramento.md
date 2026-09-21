@@ -352,6 +352,37 @@ vanno mai dedotte per analogia senza un riferimento che le sorregga.
 
 ## Aggiornamenti
 
+### 21 settembre 2026 (nona revisione: coerenza fra le occorrenze dello stesso soggetto)
+
+Difetto emerso provando una determina da scansione: lo stesso beneficiario
+compariva una volta come nominativo generico (proposta: oscura) e una volta
+come beneficiario sopra soglia (proposta: mantieni), mentre la premessa ne
+rivelava lo stato di salute. Correzioni, con cinque casi di prova (suite: 74
+casi):
+
+- **Coerenza del soggetto**: la qualifica ricavata dal contesto in un punto
+  (minore, terzo estraneo, ruolo preservato, beneficiario, contraente) vale
+  per la persona e si estende alle altre occorrenze del nome rimaste
+  generiche, in tutto il fascicolo. Le qualifiche esplicite diverse fra loro
+  (testimone in un punto, beneficiario in un altro) restano entrambe: decide
+  l'operatore. Conseguenza sul caso «modulo occupazionale»: il titolare della
+  ditta individuale, contraente (art. 37 d.lgs. 33/2013; art. 28 d.lgs.
+  36/2023), è proposto in chiaro anche dove il modulo lo chiama solo «il
+  sottoscritto».
+- **Salute o disagio del beneficiario**: il contesto sanitario o di disagio
+  trovato accanto a una qualsiasi occorrenza del nome esclude la
+  pubblicazione in ogni occorrenza, qualunque sia l'importo (art. 26,
+  comma 4, d.lgs. 33/2013). Il legame fra nome e stato di salute vale entro
+  la stessa frase fino a sei righe e 400 caratteri (prima: due righe e 250),
+  perché la premessa «Vista la richiesta del sig. …, nato …, residente …,
+  affetto da …» occupa di norma più righe.
+- **Varianti nel contesto qualificante**: «di concedere al sig. M. Rossi un
+  contributo» qualifica il soggetto Mario Rossi anche se il nome completo
+  compare solo altrove.
+- **Forme verbali dell'affidamento**: «di affidare a», «aggiudica a»,
+  «conferire l'incarico a» qualificano il contraente come i sostantivi
+  «affidatario», «aggiudicatario», «incaricato».
+
 ### 19 settembre 2026 (ottava revisione, terza revisione esterna del codice)
 
 Quindici difetti segnalati da Codex (revisione-codex-3.md); corretti tutti,

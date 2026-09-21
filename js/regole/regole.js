@@ -743,6 +743,12 @@ export const NOMINATIVI = {
   // Contesto che indica un beneficiario di vantaggio economico (fascia C2).
   beneficiari: ['beneficiari[oa]', 'contribut[oi]', 'liquid(?:are|azione|a)', 'erog(?:are|azione|a)', 'sussidi[oi]', 'rimbors[oi]', 'indennit[àa]', 'sovvenzion[ei]', 'vantaggi[oi]\\s+economic[oi]', 'ausili[oi]\\s+finanziar[oi]', 'assegn[oi]', 'buon[oi]', 'voucher', 'borsa\\s+di\\s+studio', 'somma\\s+di', 'importo\\s+di', 'a\\s+favore\\s+di', 'in\\s+favore\\s+di', 'concessione'],
   raggioBeneficiari: 250,
+  // Stato di salute o disagio riferito a un nominativo: la frase che lo rivela
+  // ("Vista la richiesta del sig. …, nato …, residente …, affetto da …")
+  // occupa spesso più righe; il legame vale entro la stessa frase (punto,
+  // punto e virgola o riga vuota) fino a questi limiti.
+  raggioSalute: 400,
+  righeSalute: 6,
   // Parole che qualificano l'importo come corrispettivo di un rapporto
   // contrattuale o professionale, non come sovvenzione: prevale il contesto
   // del contraente (art. 15 e 37 d.lgs. 33/2013), non la soglia dei mille euro.
@@ -750,7 +756,9 @@ export const NOMINATIVI = {
   // Contesto che indica un contraente, affidatario, consulente o incaricato:
   // soggetti per i quali il d.lgs. 33/2013 e la l. 190/2012 impongono la
   // pubblicazione del nominativo in Amministrazione trasparente.
-  contraenti: ['affidatari[oa]', 'aggiudicatari[oa]', 'contraente', 'appaltat(?:ore|rice)', 'consulent[ei]', 'incaricat[oa]', 'incarico\\s+(?:a|al|alla|professionale)', 'fornitor[ei]', 'esecutor[ei]', 'operatore\\s+economico', 'ditta\\s+individuale', 'liber[oa]\\s+professionist[ai]', 'lavorator[ei]\\s+autonom[oi]', 'impresa\\s+individuale', 'titolare\\s+(?:della\\s+)?(?:ditta|omonima)'],
+  contraenti: ['affidatari[oa]', 'aggiudicatari[oa]', 'contraente', 'appaltat(?:ore|rice)', 'consulent[ei]', 'incaricat[oa]', 'incarico\\s+(?:a|al|alla|professionale)',
+    // Forme verbali del dispositivo: "di affidare al geom. …", "aggiudica alla ditta …", "conferire l'incarico a …".
+    'affid(?:are|a|ato|amento)\\s+(?:a|al|allo|alla|all[’\']|ai|agli|alle)\\b', 'aggiudic(?:are|a|ato|azione)\\s+(?:a|al|allo|alla|all[’\']|ai|agli|alle)\\b', 'conferi(?:re|sce|to|mento)\\s+(?:l[’\']|dell[’\']|un\\s+)?incaric[oh]', 'fornitor[ei]', 'esecutor[ei]', 'operatore\\s+economico', 'ditta\\s+individuale', 'liber[oa]\\s+professionist[ai]', 'lavorator[ei]\\s+autonom[oi]', 'impresa\\s+individuale', 'titolare\\s+(?:della\\s+)?(?:ditta|omonima)'],
   raggioContraenti: 200,
   // Contesto che indica una persona fisica titolare di partita IVA.
   personaFisica: ['ditt[ae]\\s+individual[ei]', 'impres[ae]\\s+individual[ei]', 'liber[oi]\\s+professionist[ai]', 'professionist[ai]', 'lavorator[ei]\\s+autonom[oi]', 'titolare[ \\t]+(?:della[ \\t]+)?(?:ditta|omonima)', 'studio\\s+(?:legale|tecnico|professionale|commerciale)\\s+(?:dott|avv|ing|arch|geom|rag)', 'nat[oa](?:/[oa])?\\s+(?:a|il)', 'codice\\s+fiscale\\s+[A-Z]{6}\\d{2}'],

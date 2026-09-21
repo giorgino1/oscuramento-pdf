@@ -443,11 +443,15 @@ function assegnaContesti(pagina, rilievi) {
   }
   const terzi = associaParoleChiave(testo, nominativi, reTerzi, NOMINATIVI.raggioTerzi, 'terzo', { massimoRighe: 0 });
   const corrispettivi = associaParoleChiave(testo, nominativi, reCorrispettivi, NOMINATIVI.raggioBeneficiari, 'corrispettivo');
-  const salute = associaParoleChiave(testo, nominativi, reSaluteDisagio, NOMINATIVI.raggioBeneficiari, 'salute');
+  const salute = associaParoleChiave(testo, nominativi, reSaluteDisagio, NOMINATIVI.raggioSalute, 'salute', { massimoRighe: NOMINATIVI.righeSalute });
   const contraenti = associaParoleChiave(testo, nominativi, reContraenti, NOMINATIVI.raggioContraenti, 'contraente');
   const importi = associaParoleChiave(testo, nominativi, reImporto, NOMINATIVI.raggioBeneficiari, 'importo', { massimoRighe: 1, valore: valoreImporto });
   const beneficiari = associaParoleChiave(testo, nominativi, reBeneficiari, NOMINATIVI.raggioBeneficiari, 'beneficiario');
   for (const r of nominativi) {
+    // Il contesto di salute o disagio viene annotato su ogni occorrenza,
+    // qualunque sia la classificazione: serve alla coerenza fra le
+    // occorrenze dello stesso soggetto (coerenzaSoggetti).
+    if (salute.has(r)) r.contestoSalute = salute.get(r)[0].parola;
     if (minori.has(r)) {
       r.categoria = 'B8'; r.fascia = 'B'; r.decisione = 'oscura'; r.predefinita = 'oscura'; r.chiaveProposta = 'B8';
       r.nota = 'contesto: ' + minori.get(r)[0].parola;
@@ -493,6 +497,51 @@ function assegnaContesti(pagina, rilievi) {
   }
 }
 
+// Coerenza del trattamento fra le occorrenze dello stesso soggetto in tutto
+// il fascicolo (regole-oscuramento.md, «Coerenza del trattamento»): la
+// qualifica ricavata dal contesto in un punto (minore, terzo, ruolo
+// preservato, beneficiario, contraente) vale per la persona, non per la
+// riga, e viene trasmessa alle occorrenze rimaste generiche (C1). Lo stato di
+// salute o di disagio, ovunque compaia accanto al nome, esclude la
+// pubblicazione del beneficiario qualunque sia l'importo (art. 26, comma 4,
+// d.lgs. 33/2013) e prevale quindi su C2_sopra e C2_sotto.
+const PESO_QUALIFICA = { B8: 7, B7: 6, P: 5, C2_salute: 4, C2_sotto: 3, C2_sopra: 2, C1_contraente: 1 };
+function coerenzaSoggetti(rilievi) {
+  const perChiave = new Map();
+  for (const r of rilievi) {
+    if (!CATEGORIE[r.categoria].nominativo || !r.chiave || r.inizio == null) continue;
+    if (!perChiave.has(r.chiave)) perChiave.set(r.chiave, []);
+    perChiave.get(r.chiave).push(r);
+  }
+  const qualifica = (r) => (r.fascia === 'P' ? 'P' : r.chiaveProposta);
+  for (const [, occorrenze] of perChiave) {
+    if (occorrenze.length < 2) continue;
+    const salute = occorrenze.find((r) => r.contestoSalute);
+    if (salute) {
+      for (const r of occorrenze) {
+        if (r.categoria !== 'C2' || r.chiaveProposta === 'C2_salute') continue;
+        r.chiaveProposta = 'C2_salute';
+        r.nota = (r.nota ? r.nota + '; ' : '') + 'contesto di salute o disagio dello stesso soggetto: ' + salute.contestoSalute;
+      }
+    }
+    // La qualifica di peso maggiore fra quelle trovate si estende alle
+    // occorrenze generiche; le altre qualifiche esplicite restano com'erano.
+    let guida = null;
+    for (const r of occorrenze) {
+      const q = qualifica(r);
+      if (PESO_QUALIFICA[q] && (!guida || PESO_QUALIFICA[q] > PESO_QUALIFICA[qualifica(guida)])) guida = r;
+    }
+    if (!guida) continue;
+    for (const r of occorrenze) {
+      if (r === guida || r.categoria !== 'C1' || r.chiaveProposta !== 'C1' || r.fascia === 'P') continue;
+      r.categoria = guida.categoria; r.fascia = guida.fascia;
+      r.chiaveProposta = guida.chiaveProposta;
+      r.decisione = guida.decisione; r.predefinita = guida.predefinita;
+      r.nota = 'stesso soggetto' + (guida.nota ? ' (' + guida.nota + ')' : '');
+    }
+  }
+}
+
 // Segnalazioni per parole chiave (C3, C4, C5) prive di un nominativo nelle
 // vicinanze: non riguardano una persona identificata e vengono silenziate.
 // Con il riconoscimento dei nomi non disponibile il silenziamento è sospeso:
@@ -521,9 +570,9 @@ function declassaSaluteSenzaPersona(pagine, rilievi, nerAttivo) {
     if (r.categoria !== 'A1' || r.inizio == null) continue;
     const testo = pagine[r.pagina - 1].testo;
     const vicino = nominativi.some((n) => {
-      if (n.pagina !== r.pagina || n.fine < r.inizio - SILENZIAMENTO.raggioNominativo || n.inizio > r.fine + SILENZIAMENTO.raggioNominativo) return false;
+      if (n.pagina !== r.pagina || n.fine < r.inizio - NOMINATIVI.raggioSalute || n.inizio > r.fine + NOMINATIVI.raggioSalute) return false;
       const a = Math.min(n.fine, r.fine), b = Math.max(n.inizio, r.inizio);
-      return a >= b || stessaClausola(testo, a, b, 2);
+      return a >= b || stessaClausola(testo, a, b, NOMINATIVI.righeSalute);
     });
     if (vicino) continue;
     r.categoria = 'C8'; r.fascia = 'C'; r.decisione = null; r.predefinita = null; r.chiaveProposta = 'C8';
@@ -845,7 +894,20 @@ export async function rilevaDati(documento, { avanzamento = () => {}, segnale, s
   avanzamento('coerenza', null);
   rilievi = risolviSovrapposizioni(rilievi);
   for (const pagina of pagine) assegnaContesti(pagina, rilievi);
-  rilievi.push(...aggiungiVarianti(pagine, rilievi));
+  // Prima della coerenza, i cognomi isolati riconosciuti dal modello
+  // ("Rossi") prendono la chiave del nominativo completo, se univoco.
+  riconciliaCognomi(rilievi);
+  coerenzaSoggetti(rilievi);
+  const varianti = aggiungiVarianti(pagine, rilievi);
+  rilievi.push(...varianti);
+  if (varianti.length) {
+    // Anche le varianti ("M. Rossi", "Rossi") possono trovarsi in un contesto
+    // qualificante ("di concedere al sig. M. Rossi un contributo di euro
+    // 1.500") che il nominativo completo non aveva: si classificano e la
+    // qualifica si estende al soggetto.
+    for (const pagina of pagine) assegnaContesti(pagina, rilievi);
+    coerenzaSoggetti(rilievi);
+  }
   rilievi = risolviSovrapposizioni(rilievi);
   rilievi = silenziaSenzaNominativo(rilievi, nerAttivo);
   declassaSaluteSenzaPersona(pagine, rilievi, nerAttivo);

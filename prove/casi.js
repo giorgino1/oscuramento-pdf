@@ -532,6 +532,43 @@ export const CASI = [
     nomi: ['Anna Verdi'],
     attesi: [{ testo: 'Anna Verdi', chiave: 'C2_salute', decisione: 'oscura' }],
   },
+
+  // ------------------------------------------------------------ coerenza fra le occorrenze dello stesso soggetto
+  {
+    id: 'beneficiario-salute-lontana',
+    titolo: 'Stato di salute nella premessa, contributo nel dispositivo: stesso soggetto, pubblicazione esclusa in ogni occorrenza (art. 26, comma 4)',
+    testo: 'Vista la richiesta presentata dal sig. Mario Rossi,\nnato a Roma il 01/01/1980, codice fiscale\nRSSMRA80A01H501U, residente in via Roma 1, Roma,\ntel. 3331234567, email mario.rossi@gmail.com,\nIBAN IT60X0542811101000000123456,\naffetto da grave patologia invalidante;\n\nSI DETERMINA\ndi concedere al sig. Mario Rossi un contributo\ndi euro 1.500,00.',
+    nomi: ['Mario Rossi'],
+    attesi: [
+      { testo: 'Mario Rossi', chiave: 'C2_salute', decisione: 'oscura' },
+      { testo: 'affetto da grave patologia invalidante', categoria: 'A1' },
+    ],
+    nonAttesi: [{ testo: 'Mario Rossi', categoria: 'C1' }],
+  },
+  {
+    id: 'beneficiario-sopra-occorrenza-generica',
+    titolo: 'Beneficiario sopra soglia citato anche in premessa senza contesto: stessa marcatura in entrambe le occorrenze (art. 26, comma 2)',
+    testo: 'Vista la domanda del sig. Paolo Verdi, pervenuta il 3 marzo;\nconsiderato che la domanda è regolare;\n\nSI DETERMINA\ndi concedere al sig. Paolo Verdi un contributo di euro 2.000,00.',
+    nomi: ['Paolo Verdi'],
+    attesi: [{ testo: 'Paolo Verdi', chiave: 'C2_sopra', decisione: 'mantieni' }],
+    nonAttesi: [{ testo: 'Paolo Verdi' }],
+  },
+  {
+    id: 'affidatario-forma-verbale',
+    titolo: 'Affidamento espresso con il verbo ("di affidare al geom. …"): contraente, anche nella premessa (artt. 15 e 37 d.lgs. 33/2013)',
+    testo: "Vista l'offerta del geom. Anna Neri, pervenuta il 3 marzo;\n\nSI DETERMINA\ndi affidare al geom. Anna Neri il servizio di manutenzione per euro 4.000,00.",
+    nomi: ['Anna Neri'],
+    attesi: [{ testo: 'Anna Neri', chiave: 'C1_contraente', decisione: 'mantieni' }],
+    nonAttesi: [{ testo: 'Anna Neri' }],
+  },
+  {
+    id: 'minore-occorrenza-generica',
+    titolo: 'Minore indicato come tale in un punto: oscurato anche dove il nome compare senza contesto',
+    testo: "Vista l'istanza relativa al minore Luca Esposito;\n\nconsiderato che Luca Esposito frequenta la scuola primaria;",
+    nomi: ['Luca Esposito'],
+    attesi: [{ testo: 'Luca Esposito', categoria: 'B8', decisione: 'oscura' }],
+    nonAttesi: [{ testo: 'Luca Esposito', categoria: 'C1' }],
+  },
   {
     id: 'compenso-consulente',
     titolo: 'Compenso a un consulente: corrispettivo, non vantaggio economico (art. 15)',
@@ -541,6 +578,18 @@ export const CASI = [
     nonAttesi: [{ testo: 'Franco Costa', categoria: 'C2' }],
   },
 
+  {
+    id: 'variante-in-contesto-qualificante',
+    titolo: 'Il contesto qualificante sta accanto a una variante del nome ("al sig. M. Rossi un contributo"): la qualifica vale per il soggetto, salute compresa',
+    testo: 'Vista la domanda di Mario Rossi, affetto da grave patologia;\n\nDETERMINA di concedere al sig. M. Rossi un contributo di euro 1.500,00. Il sig. Rossi dovrà presentare rendiconto.',
+    nomi: ['Mario Rossi'],
+    attesi: [
+      { testo: 'Mario Rossi', chiave: 'C2_salute', decisione: 'oscura' },
+      { testo: 'M. Rossi', chiave: 'C2_salute', decisione: 'oscura' },
+      { testo: 'Rossi', esatto: true, chiave: 'C2_salute', decisione: 'oscura' },
+    ],
+  },
+
   // ------------------------------------------------------------ documento reale (modulo occupazionale)
   {
     id: 'modulo-occupazionale-ditta-individuale',
@@ -548,7 +597,11 @@ export const CASI = [
     testo: 'DICHIARAZIONE SITUAZIONE OCCUPAZIONALE\nIl sottoscritto ROSSI MARIO nato a PALERMO il 01/01/1980\nresidente a PALERMO in VIA ROMA 1\ncodice fiscale RSSMRA80A01H501U\nin qualità di titolare della ditta ALFA SERVIZI di Rossi Mario\ncon sede in VIA LIBERTÀ 10, PALERMO, tel. 0912345678, e-mail info@alfaservizi.it\nP. IVA 01234567897\nDICHIARA',
     nomi: ['ROSSI MARIO', 'Rossi Mario'],
     attesi: [
-      { testo: 'ROSSI MARIO', categoria: 'C1', decisione: 'oscura' },
+      // Il titolare della ditta individuale è il contraente (art. 37 d.lgs. 33/2013;
+      // art. 28 d.lgs. 36/2023): stesso soggetto in tutto il modulo, anche dove il
+      // nome compare senza contesto ("Il sottoscritto ROSSI MARIO").
+      { testo: 'ROSSI MARIO', chiave: 'C1_contraente', decisione: 'mantieni' },
+      { testo: 'Rossi Mario', chiave: 'C1_contraente', decisione: 'mantieni' },
       { testo: '01/01/1980', categoria: 'B5' },
       { testo: 'VIA ROMA 1', categoria: 'B3' },
       { testo: 'RSSMRA80A01H501U', categoria: 'B1' },
