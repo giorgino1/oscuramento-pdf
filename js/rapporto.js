@@ -206,6 +206,14 @@ export async function generaRapporto(dati) {
     const media = conf.length ? conf.reduce((a, b) => a + b, 0) / conf.length : null;
     const q = descriviQualitaOcr(media);
     im.coppia(R.qualitaOcr, q ? q.testo : '-');
+    // Revisione a schermo obbligatoria per le scansioni: il rapporto registra
+    // la conferma dell'operatore e quante pagine risultano visualizzate
+    // nell'anteprima, così che la responsabilità della revisione sia
+    // documentata (specifica funzionale, § 3).
+    if (dati.pagineViste != null) {
+      const tutte = dati.pagineViste >= documento.pagine.length;
+      im.coppia(R.revisioneSchermo, R.revisioneConfermata + '; ' + R.revisionePagineViste + ' ' + dati.pagineViste + ' ' + T.analisi.di + ' ' + documento.pagine.length + (tutte ? '' : ' ' + R.revisionePagineNonTutte));
+    }
   }
   const dest = dati.scopo ? SCOPI[dati.scopo] : null;
   if (dest) im.coppia(R.scopo, dest.etichetta);

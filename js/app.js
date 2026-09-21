@@ -134,6 +134,8 @@ function riempiTesti() {
   testo('download-bloccato', '');
   testo('conferma-scansione-testo', D.confermaScansione);
   testo('conferma-scansione-vai', D.confermaScansioneVai);
+  testo('download-avviso-pagine-vai', D.confermaScansioneVai);
+  testo('download-avviso-pagine-prosegui', D.avvisoPagineProsegui);
   testo('pagine-fine-torna', D.pagineFineTorna);
   testo('pagine-fine-vai', D.confermaScansioneVai);
   testo('genera', D.genera);
@@ -705,6 +707,8 @@ function preparaModalita() {
 // ---------------------------------------------------------------------------
 function preparaDownload() {
   el('conferma-scansione-vai').addEventListener('click', vaiAllaProssimaPaginaDaGuardare);
+  el('download-avviso-pagine-vai').addEventListener('click', () => { mostra(el('download-avviso-pagine'), false); vaiAllaProssimaPaginaDaGuardare(); });
+  el('download-avviso-pagine-prosegui').addEventListener('click', () => genera({ nonostantePagine: true }));
   el('pagine-fine-vai').addEventListener('click', vaiAllaProssimaPaginaDaGuardare);
   el('pagine-fine-torna').addEventListener('click', () => {
     el('download-scansione').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -737,9 +741,12 @@ function requisitiDownload({ conProposte = false } = {}) {
   // scarico" le conferma con lo stesso gesto.
   if (!conProposte && daConfermare(stato.rilievi).length > 0) return { ok: false, motivo: T.download.bloccatoProposte };
   if (doc.daScansione) {
-    // Revisione obbligatoria e non saltabile per le scansioni.
-    const tutteViste = doc.pagine.every((p) => stato.pagineViste.has(p.numero));
-    if (!tutteViste) return { ok: false, motivo: testoPagineViste(T.download.bloccatoScansionePagine) };
+    // Revisione obbligatoria e non saltabile per le scansioni (CLAUDE.md): il
+    // download resta bloccato finché l'utente non l'ha confermata. Quante
+    // pagine siano state effettivamente visualizzate nell'anteprima non
+    // blocca (il conteggio è approssimativo e la responsabilità della
+    // revisione è dell'amministrazione), ma viene mostrato prima del
+    // download e registrato nel rapporto.
     if (!el('conferma-scansione').checked) return { ok: false, motivo: T.download.bloccatoScansioneConferma };
   }
   return { ok: true, motivo: '' };
@@ -750,15 +757,12 @@ function aggiornaDownload() {
   if (!doc) return;
   const req = requisitiDownload({ conProposte: true });
   const tutteViste = doc.pagine.every((p) => stato.pagineViste.has(p.numero));
-  el('conferma-scansione').disabled = !tutteViste;
-  mostra(el('conferma-scansione-nota'), !tutteViste);
-  // La revisione a schermo delle scansioni è obbligatoria (CLAUDE.md): la
-  // casella resta disattivata finché tutte le pagine non sono state guardate.
-  // Il vincolo deve però essere evidente: contatore aggiornato, un pulsante
-  // che porta alla prossima pagina da guardare e, in fondo all'anteprima, un
-  // richiamo per tornare alla conferma.
-  el('conferma-scansione-nota').textContent = testoPagineViste(T.download.confermaScansioneBloccata);
+  // Contatore delle pagine guardate accanto alla conferma, pulsante che porta
+  // alla prossima pagina da guardare e, in fondo all'anteprima, un richiamo
+  // per tornare alla conferma: la revisione è guidata, non imposta.
+  el('conferma-scansione-nota').textContent = testoPagineViste(tutteViste ? T.download.confermaScansionePagineTutte : T.download.confermaScansionePagine);
   mostra(el('conferma-scansione-vai'), doc.daScansione && !tutteViste);
+  if (tutteViste) mostra(el('download-avviso-pagine'), false);
   mostra(el('pagine-fine'), doc.daScansione);
   el('pagine-fine-testo').textContent = tutteViste ? T.download.pagineFineTutte : testoPagineViste(T.download.pagineFineMancano);
   mostra(el('pagine-fine-torna'), tutteViste);
@@ -798,9 +802,19 @@ function nomeBase() {
   return stato.documento.nome.replace(/\.pdf$/i, '');
 }
 
-async function genera() {
+async function genera({ nonostantePagine = false } = {}) {
   const req = requisitiDownload();
   if (!req.ok || stato.inGenerazione) return;
+  // Scansione con pagine non ancora guardate nell'anteprima: l'utente viene
+  // avvertito e sceglie; se prosegue, il rapporto lo registra.
+  const docCorrente = stato.documento;
+  if (docCorrente.daScansione && !nonostantePagine && !docCorrente.pagine.every((p) => stato.pagineViste.has(p.numero))) {
+    el('download-avviso-pagine-testo').textContent = testoPagineViste(T.download.avvisoPagineNonGuardate);
+    mostra(el('download-avviso-pagine'), true);
+    el('download-avviso-pagine-prosegui').focus();
+    return;
+  }
+  mostra(el('download-avviso-pagine'), false);
   stato.inGenerazione = true;
   stato.controllerGenerazione = new AbortController();
   invalidaRisultato();
@@ -824,6 +838,8 @@ async function genera() {
   const dpi = stato.dpi;
   const scopo = stato.scopo;
   const ente = stato.ente;
+  // Pagine visualizzate nell'anteprima al momento della conferma: nel rapporto.
+  const pagineViste = documento.daScansione ? documento.pagine.filter((p) => stato.pagineViste.has(p.numero)).length : null;
   try {
     const dataOra = new Date();
     const { bytes, statistiche, immagini } = await generaDocumento(documento, rilievi, {
@@ -836,7 +852,7 @@ async function genera() {
         el('generazione-barra').style.width = Math.round((p / n) * 100) + '%';
       },
     });
-    const rapporto = await generaRapporto({ documento, rilievi, modalita, dpi, statistiche, dataOra, scopo, ente, esiti: statistiche.esiti });
+    const rapporto = await generaRapporto({ documento, rilievi, modalita, dpi, statistiche, dataOra, scopo, ente, esiti: statistiche.esiti, pagineViste });
     if (stato.documento !== documento) throw new Error('interrotto');
     const documentoUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
     const rapportoUrl = URL.createObjectURL(new Blob([rapporto], { type: 'application/pdf' }));
@@ -916,6 +932,7 @@ function azzeraDocumento() {
   stato.rilievi = [];
   stato.attivo = null;
   stato.pagineViste = new Set();
+  mostra(el('download-avviso-pagine'), false);
   stato.selezioneManuale = false;
   stato.scopo = null;
   stato.ente = '';

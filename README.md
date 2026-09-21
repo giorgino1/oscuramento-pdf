@@ -101,8 +101,9 @@ La promessa "il documento non lascia il tuo dispositivo" è verificabile:
    motivazione (obbligatoria per i dati vietati), applicazione a tutte le
    occorrenze, copertura specifica; strumenti per aggiungere oscuramenti a
    mano (area, testo, coordinate). Per i documenti da scansione la revisione è
-   obbligatoria: il download resta bloccato finché tutte le pagine non sono
-   state visualizzate e l'utente non ha confermato. Sotto «Opzioni avanzate»:
+   obbligatoria: il download resta bloccato finché l'utente non l'ha
+   confermata; il numero di pagine visualizzate nell'anteprima viene mostrato
+   prima del download e registrato nel rapporto. Sotto «Opzioni avanzate»:
    tipo di copertura (oscuramento pieno, OMISSIS, pseudonimizzazione coerente
    con avvertenza; le iniziali non sono offerte, Garante FAQ n. 12) e
    risoluzione. Copertura predefinita: [OMISSIS] per la pubblicazione

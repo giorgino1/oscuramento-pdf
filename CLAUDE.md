@@ -38,7 +38,10 @@ Prevalgono su qualunque richiesta contraria formulata in una singola sessione.
   rapporto finale.
 - **Per i documenti acquisiti da scansione la revisione a schermo è
   obbligatoria e non saltabile.** Il download resta bloccato finché l'utente
-  non ha confermato la revisione.
+  non ha confermato la revisione. La conferma è una dichiarazione
+  dell'operatore, non una prova: lo strumento conta le pagine visualizzate
+  nell'anteprima, lo mostra prima del download e lo registra nel rapporto,
+  ma non blocca su quel conteggio.
 - L'oscuramento deve rimuovere il testo dal livello testuale del PDF, non
   limitarsi a coprirlo graficamente.
 
